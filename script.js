@@ -154,3 +154,40 @@ document.querySelectorAll("[id^='logout']").forEach(btn => {
   btn.addEventListener("click", logoutUser);
 });
 
+// --- Botão UI-only: ocultar RIDs da tela (não apaga do banco) ---
+
+const hideRidsBtn = document.getElementById("hideRidsBtn");
+
+function hideRidsUI() {
+  const ridTable = document.getElementById("ridTableBody");
+  if (ridTable) {
+    ridTable.style.display = "none";
+    alert("RIDs ocultos apenas da visualização. Nenhum dado foi apagado.");
+  }
+  // salva a preferência no navegador
+  localStorage.setItem("rid_hide_ui", "1");
+}
+
+function restoreRidsUI() {
+  const ridTable = document.getElementById("ridTableBody");
+  if (ridTable) ridTable.style.display = "";
+  localStorage.removeItem("rid_hide_ui");
+}
+
+// Mostrar/ocultar botão e estado ao carregar
+document.addEventListener("DOMContentLoaded", () => {
+  const adminPanel = document.getElementById("adminPanel");
+  if (adminPanel && !adminPanel.classList.contains("hidden")) {
+    hideRidsBtn?.classList.remove("hidden");
+  }
+
+  if (localStorage.getItem("rid_hide_ui") === "1") {
+    hideRidsUI();
+  }
+});
+
+// Ação do botão
+hideRidsBtn?.addEventListener("click", () => {
+  const confirmHide = confirm("Deseja apenas ocultar os RIDs da tela? Nenhum dado será apagado.");
+  if (confirmHide) hideRidsUI();
+});
